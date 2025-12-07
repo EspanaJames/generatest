@@ -24,7 +24,8 @@ $username = $_SESSION["username"];
     <link rel="stylesheet" href="../../assets/styles/homePanelStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/settingsStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/gradesStyles.css" />
-    <link rel="stylesheet" href="../../assets/styles/chartsStyles.css" />
+    <link rel="stylesheet" href="../../assets/styles/testStyles.css" />
+    <link rel="stylesheet" href="../../assets/styles/subjectPopup.css" />
 </head>
 <body>
     
@@ -41,7 +42,7 @@ $username = $_SESSION["username"];
         <button class="navButton" data-page="Home">
             <img src="../../assets/images/home.png" alt="homeButton"> <span class="buttonText">Home</span>
         </button>
-        <button class="navButton" data-page="Generatest">
+        <button class="navButton" data-page="generatest">
             <img src="../../assets/images/test.png" alt="generateButton"> <span class="buttonText">Tests</span>
         </button>
         <button class="navButton" data-page="Grades"> 

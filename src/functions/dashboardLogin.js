@@ -27,7 +27,7 @@ form.addEventListener("submit", async (e) => {
     });
     window.location.href = "./src/pages/dashboard.php";
   } else if (!data) {
-    alert("Invalid username or password.");
+    alert(data);
     return;
   }
 });

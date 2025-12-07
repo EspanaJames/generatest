@@ -1,0 +1,210 @@
+.test-main-panel {
+  grid-row: 1 / span 32;
+  grid-column: 1 / span 80;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-columns: repeat(64, 1fr);
+  grid-template-rows: repeat(32, 1fr);
+}
+.test-subject-panel {
+  grid-row: 2 / span 3;
+  grid-column: 2 / span 62;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  overflow: visible;
+  gap: 10px;
+}
+.test-textBoxContainer-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  gap: 10px;
+  z-index: 1;
+  position: relative;
+  padding-right: 30px;
+  padding-left: 30px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    black 2%,
+    black 98%,
+    rgba(0, 0, 0, 0)
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    black 2%,
+    black 98%,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.test-textBoxContainer-div::-webkit-scrollbar {
+  display: none;
+}
+
+.test-textBoxContainer-div.grabbing {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+.test-box-panel {
+  flex: 0 0 100px;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 85%;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  font-size: larger;
+  font-weight: 400;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+}
+.test-box-panel:hover {
+  transform: scale(1.1);
+  border-color: #ffcc00;
+}
+.test-box-panel:active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffaa00;
+}
+
+.test-addSubject-div {
+  display: flex;
+  height: 100%;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.add-subject-button {
+  height: 85%;
+  width: 90%;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: small;
+  font-weight: 400;
+  cursor: pointer;
+  transition: transform 0.2s ease, font-size 0.2s ease;
+}
+
+.add-subject-button:hover {
+  transform: scale(1.2);
+}
+.test-addTest-panel {
+  grid-row: 6 / span 1;
+  grid-column: 2 / span 62;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 99%;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  color: white;
+  font-size: medium;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.add-test-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: large;
+  font-weight: 400;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.add-test-button:hover {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: medium;
+  font-weight: 500;
+  transform: scale(1.7);
+}
+.test-showTest-panel {
+  grid-row: 7 / span 25;
+  grid-column: 2 / span 62;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 99%;
+  align-items: center;
+  align-self: center;
+  justify-content: flex-start;
+  border-radius: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.test-showTest-panel.grabbing {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+.test-show-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 99%;
+  height: 40px;
+  border-bottom: 1px solid #cccccc;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 8px;
+}
+.test-exam-name {
+  font-size: medium;
+  font-weight: 500;
+  color: #cccccc;
+}
+.test-subject-name {
+  font-size: medium;
+  font-weight: 400;
+  color: #cccccc;
+}
+.edit-test-button {
+  background-color: transparent;
+  border: none;
+  color: #cccccc;
+  font-size: medium;
+  font-weight: 400;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.edit-test-button:hover {
+  transform: scale(1.2);
+}
