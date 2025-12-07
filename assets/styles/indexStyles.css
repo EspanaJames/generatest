@@ -1,0 +1,228 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: titleFont;
+  src: url("../fonts/mainFont.ttf") format("truetype");
+  font-weight: normal;
+}
+html {
+  font-family: mainFont, sans-serif;
+  font-size: 12px;
+}
+.headerClass {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  height: 5vh;
+  width: 100vw;
+  padding-left: 10px;
+  padding-right: 20px;
+  overflow: hidden;
+  background-color: #cecece;
+}
+.headerClass > div {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  height: auto;
+  width: auto;
+  gap: 10px;
+  user-select: none;
+}
+.headerClass > div > h1 {
+  font-family: titleFont, sans-serif;
+  font-size: clamp(1.25rem, 1.9rem, 2.25rem);
+  color: #555454;
+}
+
+.headerClass > div > img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.headerClass > div > * {
+  user-select: none;
+}
+.headerClass > form {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  width: auto;
+  gap: 10px;
+}
+.contentHolder {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  grid-template-rows: repeat(32, 1fr);
+  align-self: center;
+  position: relative;
+  height: 93vh;
+  width: 100vw;
+  margin: auto;
+  user-select: none;
+  box-shadow: inset 0 6px 32px rgba(41, 41, 41, 0.25);
+  background-color: rgb(255, 255, 255);
+}
+.contentHolder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+.contentHolder > .topIconHolder {
+  grid-column: 2 / span 9;
+  grid-row: 3 / span 14;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  background-color: transparent;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.contentHolder .topIconHolder > img {
+  height: 90%;
+  width: auto;
+}
+.contentHolder .topIconHolder > p {
+  font-family: titleFont, sans-serif;
+  font-weight: bold;
+  font-size: xx-large;
+}
+.contentHolder > .siteInformation {
+  grid-column: 12 / span 20;
+  grid-row: 3 / span 14;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+  padding-right: 100px;
+}
+.contentHolder .siteInformation > h2 {
+  font-family: titleFont, sans-serif;
+  font-weight: bold;
+  font-size: 60px;
+}
+.contentHolder .siteInformation > p {
+  font-family: titleFont, sans-serif;
+  font-size: medium;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.contentHolder > .collaboratorContainer {
+  grid-column: 2 / span 30;
+  grid-row: 19 / span 12;
+  display: flex;
+  flex-wrap: wrap;
+  flex: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  gap: 25px;
+}
+.collaboratorContainer > .collaborator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: auto;
+}
+.collaboratorContainer .collaborator > img {
+  height: 100%;
+  width: auto;
+}
+.collaboratorContainer .collaborator > p {
+  font-family: titleFont, sans-serif;
+  font-weight: bold;
+  font-size: small;
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: auto;
+  gap: 20px;
+  user-select: none;
+}
+
+.inputFields {
+  position: relative;
+  width: 160px;
+}
+
+.inputFields input {
+  background-color: transparent !important;
+  width: 100%;
+  padding: 6px 0;
+  border: none;
+  border-bottom: 2px solid #cacaca;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+}
+
+.inputFields input:focus {
+  background-color: transparent;
+  border-bottom-color: #460472;
+}
+
+.inputFields img {
+  position: absolute;
+  right: 0;
+  align-self: center;
+  width: 20px;
+  height: auto;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.2s ease;
+}
+
+.inputFields img:hover {
+  opacity: 1;
+}
+.submitBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.submitBtn img {
+  width: 28px;
+  height: 28px;
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  height: 2vh;
+  width: 100vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  user-select: none;
+  background-color: #cecece;
+}

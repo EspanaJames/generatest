@@ -1,0 +1,9 @@
+.settings-main-panel {
+  grid-row: 2 / span 30;
+  grid-column: 2 / span 62;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="James España" />
+    <title>Company</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./assets/images/logos/mainLogo.png"
+    />
+    <link rel="stylesheet" href="./assets/styles/indexStyles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./src/api/supabaseClient.js"></script>
+  </head>
+  <body>
+    <nav class="headerClass">
+      <div>
+        <img src="./assets/images/GENERATEST.png" alt="logo" />
+        <h1>GENERATEST</h1>
+      </div>
+      <form class="inputForm">
+        <div class="inputFields">
+          <input
+            type="text"
+            id="user"
+            name="user"
+            placeholder="USERNAME"
+            required
+          />
+        </div>
+
+        <div class="inputFields">
+          <input
+            type="password"
+            id="pass"
+            name="pass"
+            placeholder="PASSWORD"
+            autocomplete="current-password"
+            required
+          />
+          <img
+            id="togglePass"
+            src="./assets/images/Unview.png"
+            alt="showPasswords"
+            onclick="show()"
+          />
+        </div>
+
+        <button type="submit" class="submitBtn">SUBMIT</button>
+      </form>
+    </nav>
+    <section class="contentHolder">
+      <div class="topIconHolder">
+        <img src="/assets/images/GENERATEST.png" alt="topLOGO" />
+        <p>GENERATEST</p>
+      </div>
+      <div class="siteInformation">
+        <h2>ABOUT US!</h2>
+        <p>
+          Want to generate tests and quizzes easily? You've come to the right
+          place! At GENERATEST, we specialize in creating customized tests with
+          unique questions tailored to your needs. Whether you're a teacher
+          looking to save time or a student seeking extra practice, our platform
+          has got you covered. Simply input your questions and the correct
+          answer, and let our advanced algorithms do the rest. Say goodbye to
+          the hassle of test creation and hello to efficient learning with
+          GENERATEST!
+        </p>
+      </div>
+      <div class="collaboratorContainer">
+        <div class="collaborator">
+          <img
+            src="./assets/images/sampleCollaborators.png"
+            alt="collaborator"
+          />
+          <p>COMPUTER ENGINEERING</p>
+        </div>
+      </div>
+    </section>
+    <footer class="infoSection">
+      <!-- <div>
+        <p>© 2025 James España</p>
+      </div>
+      <div>
+        <p>Don't have an account?</p>
+        <a href="#">REGISTER</a>
+      </div> -->
+    </footer>
+
+    <script src="./src/functions/showPassword.js"></script>
+    <script src="./src/functions/dashboardLogin.js"></script>
+  </body>
+</html>
