@@ -1,4 +1,4 @@
-const SUPABASE_URL = "http://localhost:54321";
+const SUPABASE_URL = "http://192.168.31.138:54321";
 const SUPABASE_ANON_KEY = "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH";
 
 export const supabaseClient = supabase.createClient(

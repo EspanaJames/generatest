@@ -3,6 +3,7 @@ import { openAddExamPopup } from "./popups/addExamPopup.js";
 import { initAddSubjectPopup } from "./popups/addSubjectPopup.js";
 import { initEditSubjectPopup } from "./popups/subjectNotes.js";
 import { loadSubjectsByUser } from "../../api/loadSubjectsByUser.js";
+import { initEditExamPopup } from "./popups/editExamPopup.js";
 export async function renderGeneratePanel() {
   const parent = document.getElementById("parentId");
 
@@ -33,18 +34,17 @@ export async function renderGeneratePanel() {
       exams = data;
     }
   }
-
   exams.forEach((exam) => {
     const testRow = document.createElement("div");
     testRow.classList.add("test-show-row");
 
     const examName = document.createElement("span");
     examName.classList.add("test-exam-name");
-    examName.textContent = exam.exam_name;
+    examName.textContent = `${exam.exam_name} - ${exam.exam_id}`;
 
     const subjectName = document.createElement("span");
     subjectName.classList.add("test-subject-name");
-    subjectName.textContent = `${exam.subject_code} - ${exam.subject_name}`; // <- here
+    subjectName.textContent = `${exam.subject_code} - ${exam.subject_name}`;
 
     const editButton = document.createElement("button");
     editButton.classList.add("edit-test-button");
@@ -53,6 +53,7 @@ export async function renderGeneratePanel() {
     testRow.appendChild(examName);
     testRow.appendChild(subjectName);
     testRow.appendChild(editButton);
+    initEditExamPopup(editButton, exam);
 
     testShowPanel.appendChild(testRow);
   });

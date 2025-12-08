@@ -17,6 +17,7 @@ export function openAddSubjectPopup() {
   const title = document.createElement("h2");
   title.classList.add("subject-popup-title");
   title.textContent = "Add New Subject";
+
   const content = document.createElement("div");
   content.classList.add("subject-add-popup-content");
   const subjectNameInput = document.createElement("input");
@@ -32,7 +33,6 @@ export function openAddSubjectPopup() {
   const saveBtn = document.createElement("button");
   saveBtn.classList.add("subject-add-popup-save");
   saveBtn.textContent = "Save";
-
   saveBtn.addEventListener("click", async () => {
     const name = subjectNameInput.value.trim();
     const code = subjectCodeInput.value.trim();

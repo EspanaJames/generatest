@@ -1,4 +1,4 @@
-.subject-popup-overlay {
+.exams-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   user-select: none;
 }
 
-.subject-popup {
+.exams-popup {
   width: 60%;
   height: 50%;
   background-color: #1c1c1c;
@@ -23,7 +23,7 @@
   position: relative;
   user-select: none;
 }
-.subject-add-popup {
+.exams-add-popup {
   width: 20%;
   height: 20%;
   background-color: #1c1c1c;
@@ -35,11 +35,11 @@
   user-select: none;
 }
 
-.subject-popup-title {
+.exams-popup-title {
   margin-bottom: 15px;
 }
 
-.subject-popup-close {
+.exams-popup-close {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -51,10 +51,10 @@
   border: none;
   transition: transform 0.2s ease-in-out;
 }
-.subject-popup-close:hover {
+.exams-popup-close:hover {
   transform: scale(1.2);
 }
-.subject-popup-content {
+.exams-popup-content {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -63,61 +63,14 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
-.subject-note {
+.exams-note {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   height: auto;
   width: 100%;
-  padding: 10px;
   border-top: 1px solid #cacaca;
 }
-.subject-note-text {
-  height: 100%;
-  width: auto;
-  border: none;
-  background-color: transparent !important;
-  font-size: 1.2rem;
-}
-.subject-note-upload {
-  height: 100%;
-  width: auto;
-  border: none;
-  background-color: transparent !important;
-  font-size: 1.2rem;
-  color: white;
-  transition: transform 0.2s ease-in-out;
-}
-.subject-note-upload:hover {
-  transform: scale(1.05);
-}
-.subject-note-edit {
-  height: 100%;
-  width: auto;
-  border: none;
-  background-color: transparent !important;
-  font-size: 1.2rem;
-  color: white;
-  transition: transform 0.2s ease-in-out;
-}
-.subject-note-edit:hover {
-  transform: scale(1.05);
-}
-.subject-note-accept {
-  height: 100%;
-  width: auto;
-  border: none;
-  background-color: transparent !important;
-  font-size: 1.2rem;
-  color: white;
-  transition: transform 0.2s ease-in-out;
-}
-
-.subject-note-accept:hover {
-  transform: scale(1.05);
-}
-.subject-popup-add-notes {
+.exams-popup-add-notes {
   position: relative;
   height: auto;
   width: 100%;
@@ -128,7 +81,7 @@
   padding-top: 8px;
   transition: transform 0.2s ease-in-out;
 }
-.subject-popup-add-notes::before {
+.exams-popup-add-notes::before {
   content: "";
   position: absolute;
   top: 0;
@@ -137,10 +90,10 @@
   height: 1px;
   background-color: #cacaca;
 }
-.subject-popup-add-notes:hover {
+.exams-popup-add-notes:hover {
   transform: scale(1.05);
 }
-.subject-add-popup-content {
+.exams-add-popup-content {
   height: 50%;
   width: 100%;
   position: relative;
@@ -151,7 +104,7 @@
   justify-content: center;
   user-select: none;
 }
-.subject-add-popup-input {
+.exams-add-popup-input {
   background-color: transparent !important;
   width: 90%;
   margin: 5px auto;
@@ -163,7 +116,7 @@
   outline: none;
   color: #cacaca;
 }
-.subject-add-popup-save {
+.exams-add-popup-save {
   margin-top: 5px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -176,6 +129,22 @@
   border: none;
   transition: transform 0.2s ease-in-out;
 }
-.subject-add-popup-save:hover {
+.exams-add-popup-save:hover {
+  transform: scale(1.2);
+}
+.exams-popup-add-question-button {
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  font-size: large;
+  background: transparent;
+  color: #cacaca;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+.exams-popup-add-question-button:hover {
   transform: scale(1.2);
 }

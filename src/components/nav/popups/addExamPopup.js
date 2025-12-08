@@ -84,6 +84,7 @@ export async function openAddExamPopup() {
       return;
     }
 
+    // Verify subject exists and belongs to the user
     const { data: subjectData, error: subjectError } = await supabaseClient
       .from("subjects")
       .select("*")
@@ -97,7 +98,10 @@ export async function openAddExamPopup() {
       return;
     }
 
+    const exam_id = `${subject_code}-${Date.now()}`;
+
     const { error: examError } = await supabaseClient.from("exams").insert({
+      exam_id,
       subject_code,
       subject_name,
       exam_name,

@@ -27,6 +27,7 @@ $username = $_SESSION["username"];
     <link rel="stylesheet" href="../../assets/styles/testStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/subjectPopupStyles.css"/> 
     <link rel="stylesheet" href="../../assets/styles/examPopupStyles.css" />
+    <link rel="stylesheet" href="../../assets/styles/editExamPopupStyles.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
