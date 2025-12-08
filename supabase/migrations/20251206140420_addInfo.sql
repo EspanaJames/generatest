@@ -104,7 +104,7 @@ create table if not exists subject_books (
     subject_name text not null,
     title text not null,            -- NEW: note title
     created_by uuid not null references adminusers(id) on delete cascade,
-    pdf bytea not null,
+    pdf text not null,
     created_at timestamp with time zone default now()
 );
 

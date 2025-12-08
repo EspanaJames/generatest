@@ -71,7 +71,7 @@ export function initEditSubjectPopup(button, subject) {
 
         const fileLink = document.createElement("a");
         fileLink.href = url || "#";
-        fileLink.textContent = book.title;
+        fileLink.textContent = fileObj.name;
         fileLink.download = fileObj?.name || book.title;
         fileLink.target = "_blank";
         fileLink.style.cursor = "pointer";
