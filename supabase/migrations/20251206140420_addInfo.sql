@@ -1,64 +1,99 @@
 -- adminUsers table
-create table if not exists adminUsers (
-  id uuid primary key default gen_random_uuid(),
+create table if not exists adminusers (  
+  id uuid primary key references auth.users(id) on delete cascade, 
   username text unique not null,
-  password_hash text not null,
+  email text unique not null,
   first_name text not null,
   last_name text not null,
+  gender text,
   created_at timestamp with time zone default now()
 );
 
--- subjects table
+alter table adminusers enable row level security;
+
+create policy "Users can insert themselves" 
+on adminUsers
+for insert
+with check (auth.uid() = id);
+
+create policy "Users can select themselves"
+on adminUsers
+for select
+using (auth.uid() = id);
+
+create policy "Users can update themselves"
+on adminUsers
+for update
+using (auth.uid() = id)
+with check (auth.uid() = id);
+
+create policy "Users can delete themselves"
+on adminUsers
+for delete
+using (auth.uid() = id);
+
+
 create table if not exists subjects (
   id uuid primary key default gen_random_uuid(),
   subject_name text not null,
   subject_code text not null unique,
-  created_by text not null references adminUsers(username) on delete cascade,
+  created_by uuid not null references adminUsers(id) on delete cascade,
   created_at timestamp with time zone default now()
 );
 
--- Enable Row Level Security
-alter table adminUsers enable row level security;
 alter table subjects enable row level security;
+  
+create policy "Users can insert their own subjects"
+on subjects
+for insert
+with check (created_by = auth.uid());
 
--- Policies for adminUsers
-create policy "Allow select on adminUsers"
-on adminUsers
-for select
-to public
-using (true);
-
-create policy "Allow insert/update/delete on adminUsers"
-on adminUsers
-for all
-to public
-using (true)
-with check (true);
-
-create policy "Allow select on subjects"
+create policy "Users can select their own subjects"
 on subjects
 for select
-to public
-using (true);
+using (created_by = auth.uid());
 
-create policy "Allow insert/update/delete on subjects"
+create policy "Users can update their own subjects"
 on subjects
-for all
-to public
-using (true)
-with check (true);
+for update
+using (created_by = auth.uid())
+with check (created_by = auth.uid());
 
--- Seed some users (store actual hashes, not plaintext)
-insert into adminUsers (username, password_hash, first_name, last_name) 
-values 
-  ('victorjohn', 'vj123', 'Victor', 'John Anunciado'),
-  ('james', 'james123', 'James', 'España');
+create policy "Users can delete their own subjects"
+on subjects
+for delete
+using (created_by = auth.uid());
 
-insert into subjects (subject_name, subject_code, created_by)
-values
-  ('Mathematics', 'MATH101', 'james'),
-  ('Physics', 'PHYS101', 'james'),
-  ('Chemistry', 'CHEM101', 'james'),
-  ('English', 'ENG101', 'james'),
-  ('English2', 'ENG102', 'victorjohn'),
-  ('Computer Science', 'CS101', 'james');
+create table if not exists exams (
+  id uuid primary key default gen_random_uuid(),
+  subject_code text not null,
+  subject_name text not null,
+  exam_name text not null,
+  created_by uuid not null references adminUsers(id) on delete cascade,
+  num_items int not null,
+  created_at timestamp with time zone default now()
+);
+
+alter table exams enable row level security;
+
+
+create policy "Users can insert their own exams"
+on exams
+for insert
+with check (created_by = auth.uid());
+
+create policy "Users can select their own exams"
+on exams
+for select
+using (created_by = auth.uid());
+
+create policy "Users can update their own exams"
+on exams
+for update
+using (created_by = auth.uid())
+with check (created_by = auth.uid());
+
+create policy "Users can delete their own exams"
+on exams
+for delete
+using (created_by = auth.uid());

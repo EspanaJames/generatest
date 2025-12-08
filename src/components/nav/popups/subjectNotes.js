@@ -16,9 +16,6 @@ export function initEditSubjectPopup(button, subject) {
 
     const content = document.createElement("div");
     content.classList.add("subject-popup-content");
-    content.innerHTML = `
-      <p>Created By:  <strong>${subject.created_by}</strong></p>
-    `;
 
     const closeBtn = document.createElement("button");
     closeBtn.classList.add("subject-popup-close");

@@ -1,12 +1,11 @@
 import { supabaseClient } from "./supabaseClient.js";
 
-export async function loadSubjectsByUser(username) {
+export async function loadSubjectsByUser() {
   try {
     const { data, error } = await supabaseClient
       .from("subjects")
       .select("*")
-      .eq("created_by", username)
-      .order("id", { ascending: true });
+      .order("created_at", { ascending: true }); // RLS filters automatically
 
     if (error) {
       console.error("❌ Failed to load subjects:", error.message);

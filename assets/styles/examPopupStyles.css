@@ -1,0 +1,81 @@
+/* overlay */
+.exam-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.exam-add-popup {
+  width: 25%;
+  height: 25%;
+  background-color: #1c1c1c;
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+  user-select: none;
+}
+.exam-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: #cacaca;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+.exam-popup-close:hover {
+  transform: scale(1.2);
+}
+.exam-add-popup-content {
+  height: 50%;
+  width: 100%;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  user-select: none;
+}
+.exam-add-popup-input {
+  background-color: transparent !important;
+  width: 90%;
+  margin: 5px auto;
+  padding: 6px 0;
+  border: none;
+  border-bottom: 2px solid #cacaca;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+  color: #cacaca;
+}
+.exam-add-popup-save {
+  margin-top: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: auto;
+  background-color: transparent;
+  color: #cacaca;
+  border-radius: 4px;
+  float: right;
+  margin-right: 15px;
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+.exam-add-popup-save:hover {
+  transform: scale(1.2);
+}

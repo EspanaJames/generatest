@@ -17,6 +17,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <script type="module" src="./src/api/supabaseClient.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
   </head>
   <body>
     <nav class="headerClass">
@@ -60,7 +61,7 @@
         <div class="registerBar">ACCOUNT REGISTRATION</div>
 
         <div class="registerForm">
-          <form action="/register" method="post">
+          <form class="signupForm">
             <div class="inputWithIcon">
               <i class="fas fa-user-circle"></i>
               <input
@@ -126,8 +127,17 @@
                 required
               />
             </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-venus-mars"></i>
+              <select name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-            <button type="submit">Register</button>
+            <button type="submit">REGISTER</button>
           </form>
         </div>
       </div>
@@ -164,10 +174,12 @@
       </div>
     </section>
     <footer class="infoSection">
-      <!-- <div>
+      <div>
         <p>© 2025 James España</p>
-      </div> -->
+      </div>
     </footer>
+
+    <script type="module" src="./src/functions/indexSignUp.js"></script>
     <script src="./src/functions/showPassword.js"></script>
     <script type="module" src="./src/functions/dashboardLogin.js"></script>
   </body>

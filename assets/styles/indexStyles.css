@@ -106,7 +106,49 @@ html {
   cursor: pointer;
   user-select: none;
   box-shadow: 0 4px 12px rgba(19, 19, 19, 0.6);
+  border: 2px solid;
+  border-image-slice: 1;
+  border-width: 2px;
+  border-image-source: linear-gradient(
+    90deg,
+    #ffffff,
+    #3d3d3d,
+    #ffffff,
+    #3d3d3d
+  );
+  border-image-repeat: round;
+  animation: borderPulse 3s linear infinite alternate;
   transition: all 0.3s ease-in-out;
+}
+
+@keyframes borderPulse {
+  0% {
+    border-image-source: linear-gradient(
+      90deg,
+      #ffffff,
+      #3d3d3d,
+      #ffffff,
+      #3d3d3d
+    );
+  }
+  50% {
+    border-image-source: linear-gradient(
+      90deg,
+      #3d3d3d,
+      #ffffff,
+      #3d3d3d,
+      #ffffff
+    );
+  }
+  100% {
+    border-image-source: linear-gradient(
+      90deg,
+      #ffffff,
+      #3d3d3d,
+      #ffffff,
+      #3d3d3d
+    );
+  }
 }
 .registerBar:hover {
   transform: scale(1.05);
@@ -200,20 +242,20 @@ html {
   border-bottom-color: #460472 !important;
 }
 .registerForm button {
-  margin-top: 10px;
-  padding: 10px 20px;
+  margin-top: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: auto;
   background-color: transparent;
   color: white;
-  border: 2px solid #cacaca;
+  border: 1px solid #cacaca;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
   transition: all 0.3s ease;
+  letter-spacing: 10px;
 }
 .registerForm button:hover {
-  background-color: white;
-  color: #1f1e1e;
-  border-color: white;
+  transform: scale(1.05);
 }
 @keyframes rotateBorder {
   0% {
@@ -222,21 +264,6 @@ html {
   100% {
     background-position: 100% 50%;
   }
-}
-
-.registerForm button:hover {
-  background-color: transparent;
-  background: linear-gradient(90deg, transparent, white, transparent) border-box;
-  border-image: linear-gradient(90deg, transparent, white, transparent) 1;
-  animation: rotateBorder 2s linear infinite;
-}
-
-.registerForm input:-webkit-autofill,
-.registerForm input:-webkit-autofill:hover,
-.registerForm input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
-  box-shadow: 0 0 0 1000px transparent inset !important;
-  -webkit-text-fill-color: transparent !important;
 }
 
 .contentHolder > .topIconHolder {
@@ -388,7 +415,7 @@ html {
   flex-direction: row;
   flex-wrap: nowrap;
   position: relative;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   height: 2vh;
   width: 100vw;
@@ -397,7 +424,9 @@ html {
   user-select: none;
   background-color: #1f1e1e;
 }
-
+.infoSection > div > p {
+  color: white;
+}
 @keyframes slideDown {
   from {
     opacity: 0;

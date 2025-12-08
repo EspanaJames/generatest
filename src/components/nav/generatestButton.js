@@ -1,3 +1,5 @@
+import { supabaseClient } from "../../api/supabaseClient.js";
+import { openAddExamPopup } from "./popups/addExamPopup.js";
 import { initAddSubjectPopup } from "./popups/addSubjectPopup.js";
 import { initEditSubjectPopup } from "./popups/subjectNotes.js";
 import { loadSubjectsByUser } from "../../api/loadSubjectsByUser.js";
@@ -14,17 +16,35 @@ export async function renderGeneratePanel() {
   testAddPanel.classList.add("test-addTest-panel");
   const testShowPanel = document.createElement("div");
   testShowPanel.classList.add("test-showTest-panel");
-  for (let i = 0; i <= 40; i++) {
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const user = userData?.user;
+
+  let exams = [];
+  if (user) {
+    const { data, error } = await supabaseClient
+      .from("exams")
+      .select("*")
+      .eq("created_by", user.id)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching exams:", error);
+    } else {
+      exams = data;
+    }
+  }
+
+  exams.forEach((exam) => {
     const testRow = document.createElement("div");
     testRow.classList.add("test-show-row");
 
     const examName = document.createElement("span");
     examName.classList.add("test-exam-name");
-    examName.textContent = `Exam ${i}`;
+    examName.textContent = exam.exam_name;
 
     const subjectName = document.createElement("span");
     subjectName.classList.add("test-subject-name");
-    subjectName.textContent = `Subject ${i}`;
+    subjectName.textContent = `${exam.subject_code} - ${exam.subject_name}`; // <- here
 
     const editButton = document.createElement("button");
     editButton.classList.add("edit-test-button");
@@ -35,7 +55,7 @@ export async function renderGeneratePanel() {
     testRow.appendChild(editButton);
 
     testShowPanel.appendChild(testRow);
-  }
+  });
   const testBoxContainer = document.createElement("div");
   testBoxContainer.classList.add("test-textBoxContainer-div");
 
@@ -44,7 +64,7 @@ export async function renderGeneratePanel() {
   subjects.forEach((subj) => {
     const boxButton = document.createElement("button");
     boxButton.classList.add("test-box-button");
-    boxButton.textContent = subj.subject_name;
+    boxButton.textContent = subj.subject_code;
     testBoxContainer.appendChild(boxButton);
     initEditSubjectPopup(boxButton, subj);
   });
@@ -66,8 +86,9 @@ export async function renderGeneratePanel() {
   addButton.classList.add("add-subject-button");
   addDiv.appendChild(addButton);
   initAddSubjectPopup(addButton);
-
-  //test add panel
+  addTestButton.addEventListener("click", () => {
+    openAddExamPopup();
+  });
   testAddPanel.appendChild(testTitleDiv);
   testAddPanel.appendChild(addTestButton);
 

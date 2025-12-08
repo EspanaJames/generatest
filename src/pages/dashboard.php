@@ -25,7 +25,8 @@ $username = $_SESSION["username"];
     <link rel="stylesheet" href="../../assets/styles/settingsStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/gradesStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/testStyles.css" />
-    <link rel="stylesheet" href="../../assets/styles/subjectPopup.css" />
+    <link rel="stylesheet" href="../../assets/styles/subjectPopupStyles.css"/> 
+    <link rel="stylesheet" href="../../assets/styles/examPopupStyles.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -77,10 +78,10 @@ $username = $_SESSION["username"];
     
     }
     </script>
-    <script src="../functions/dashboardLogout.js"></script>
+    <script type = "module"src="../functions/dashboardLogout.js"></script>
     <script>
     const LOGGED_IN_USER = "<?php echo htmlspecialchars($username); ?>";
-</script>
+    </script>
     <script type="module" src="../components/nav/main.js"></script>
 </body>
 </html>
