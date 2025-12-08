@@ -130,3 +130,41 @@ create policy "Users can delete their own subject books"
 on subject_books
 for delete
 using (created_by = auth.uid());
+create table if not exists exam_questions (
+    id uuid primary key default gen_random_uuid(),
+
+    exam_id text not null,                
+    question_number int not null,          
+    question text not null,               
+    answer text not null,                 
+    created_by uuid not null
+        references adminUsers(id) on delete cascade,
+
+    created_at timestamp with time zone default now(),
+
+    unique (exam_id, question_number)    
+);
+
+alter table exam_questions enable row level security;
+
+create policy "Users can insert their own subject books"
+on exam_questions
+for insert
+with check (created_by = auth.uid());
+
+create policy "Users can select their own subject books"
+on exam_questions
+for select
+using (created_by = auth.uid());
+
+create policy "Users can update their own subject books"
+on exam_questions
+for update
+using (created_by = auth.uid())
+with check (created_by = auth.uid());
+
+create policy "Users can delete their own subject books"
+on exam_questions
+for delete
+using (created_by = auth.uid());
+
