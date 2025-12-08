@@ -21,6 +21,7 @@ export function initEditSubjectPopup(button, subject) {
 
     let addingNewNote = false;
 
+    // ---------------- LOAD NOTES ----------------
     const { data: notes, error } = await supabaseClient
       .from("subject_books")
       .select("*")
@@ -41,11 +42,37 @@ export function initEditSubjectPopup(button, subject) {
         noteText.textContent = book.title;
         noteText.contentEditable = "true";
 
-        const fileBlob = new Blob([book.pdf], { type: "application/pdf" });
+        // ✅ FIX: Properly decode bytea/base64
+        let fileBlob = null;
+        let url = null;
+        let fileObj = null;
+
+        try {
+          fileObj = book.pdf;
+
+          if (typeof fileObj === "string") {
+            fileObj = JSON.parse(fileObj);
+          }
+
+          if (fileObj?.data) {
+            const binary = atob(fileObj.data);
+            const bytes = new Uint8Array(binary.length);
+
+            for (let i = 0; i < binary.length; i++) {
+              bytes[i] = binary.charCodeAt(i);
+            }
+
+            fileBlob = new Blob([bytes], { type: fileObj.type });
+            url = URL.createObjectURL(fileBlob);
+          }
+        } catch (e) {
+          console.error("File decode error:", e);
+        }
+
         const fileLink = document.createElement("a");
-        fileLink.href = URL.createObjectURL(fileBlob);
+        fileLink.href = url || "#";
         fileLink.textContent = book.title;
-        fileLink.download = `${book.title}.pdf`;
+        fileLink.download = fileObj?.name || book.title;
         fileLink.target = "_blank";
         fileLink.style.cursor = "pointer";
         fileLink.classList.add("subject-note-file-link");
@@ -64,6 +91,8 @@ export function initEditSubjectPopup(button, subject) {
         content.appendChild(note);
       });
     }
+
+    // ---------------- ADD NOTES BUTTON ----------------
     const addBtn = document.createElement("button");
     addBtn.classList.add("subject-popup-add-notes");
     addBtn.textContent = "ADD NOTES";
@@ -80,6 +109,10 @@ export function initEditSubjectPopup(button, subject) {
       noteText.textContent = "Enter TITLE";
       noteText.contentEditable = "true";
 
+      // Store file data in closure
+      let selectedFileData = null;
+      let selectedFileName = null;
+
       const fileInput = document.createElement("input");
       fileInput.type = "file";
       fileInput.accept = ".pdf,.doc,.docx,.txt";
@@ -94,16 +127,34 @@ export function initEditSubjectPopup(button, subject) {
       acceptButton.classList.add("subject-note-accept");
       acceptButton.textContent = "Accept";
 
+      // Convert array buffer to base64
+      function arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+      }
+
+      // Convert base64 to blob
+      function base64ToBlob(base64String, mimeType) {
+        const binary = atob(base64String);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return new Blob([bytes], { type: mimeType });
+      }
+
+      // ---------------- SAVE TO DATABASE ----------------
       acceptButton.addEventListener("click", async () => {
         const noteTitle = noteText.textContent.trim();
-        const file = fileInput.files[0];
 
-        if (!noteTitle || !file) {
+        if (!noteTitle || !selectedFileData) {
           alert("Please provide both a title and a file before accepting.");
           return;
         }
-
-        const arrayBuffer = await file.arrayBuffer();
 
         const { error: insertError } = await supabaseClient
           .from("subject_books")
@@ -111,7 +162,13 @@ export function initEditSubjectPopup(button, subject) {
             subject_code: subject.subject_code,
             subject_name: subject.subject_name,
             created_by: subject.created_by,
-            pdf: new Uint8Array(arrayBuffer),
+
+            pdf: JSON.stringify({
+              name: selectedFileName.name,
+              type: selectedFileName.type,
+              data: selectedFileData,
+            }),
+
             title: noteTitle,
           });
 
@@ -122,19 +179,23 @@ export function initEditSubjectPopup(button, subject) {
           alert("Note saved successfully!");
           addingNewNote = false;
 
+          // Create download link using the stored base64 data
+          const fileBlob = base64ToBlob(
+            selectedFileData,
+            selectedFileName.type
+          );
+          const url = URL.createObjectURL(fileBlob);
+
           const fileLink = document.createElement("a");
-          fileLink.href = URL.createObjectURL(file);
+          fileLink.href = url;
           fileLink.textContent = noteTitle;
-          fileLink.download = noteTitle;
+          fileLink.download = selectedFileName.name;
           fileLink.target = "_blank";
           fileLink.style.cursor = "pointer";
 
           const editButton = document.createElement("button");
           editButton.textContent = "Edit";
           editButton.classList.add("subject-note-edit");
-          editButton.addEventListener("click", () => {
-            console.log("Edit note:", noteText.textContent.trim());
-          });
 
           note.replaceChild(fileLink, uploadButton);
           note.removeChild(acceptButton);
@@ -142,11 +203,19 @@ export function initEditSubjectPopup(button, subject) {
         }
       });
 
-      fileInput.addEventListener("change", () => {
+      fileInput.addEventListener("change", async () => {
         if (fileInput.files.length > 0) {
           const file = fileInput.files[0];
+          selectedFileName = { name: file.name, type: file.type };
+
+          // Convert file to base64 and store
+          const arrayBuffer = await file.arrayBuffer();
+          selectedFileData = arrayBufferToBase64(arrayBuffer);
+
+          const url = URL.createObjectURL(file);
+
           const fileLink = document.createElement("a");
-          fileLink.href = URL.createObjectURL(file);
+          fileLink.href = url;
           fileLink.textContent = file.name;
           fileLink.download = file.name;
           fileLink.target = "_blank";
@@ -164,6 +233,7 @@ export function initEditSubjectPopup(button, subject) {
       content.insertBefore(note, addBtn);
     });
 
+    // ---------------- CLOSE BUTTON ----------------
     const closeBtn = document.createElement("button");
     closeBtn.classList.add("subject-popup-close");
     closeBtn.textContent = "Close";
