@@ -77,8 +77,170 @@ html {
   background: rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
+.registrationHolder {
+  grid-column: 2 / span 10;
+  grid-row: 3 / span 16;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  grid-template-rows: repeat(32, 1fr);
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  color: white;
+  z-index: 1;
+  overflow: hidden;
+}
+.registerBar {
+  grid-column: 2 / span 30;
+  grid-row: 2 / span 2;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(19, 19, 19, 0.6);
+  transition: all 0.3s ease-in-out;
+}
+.registerBar:hover {
+  transform: scale(1.05);
+}
+.registerForm {
+  grid-column: 2 / span 30;
+  grid-row: 4 / span 28;
+  height: 90%;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  background: transparent;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 0;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  animation: slideUp 0.5s ease-in-out forwards;
+}
+.registerForm.active {
+  opacity: 1;
+  visibility: visible;
+  animation: slideDown 0.5s ease-in-out forwards;
+}
+.registerForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.registerForm input,
+.registerForm select {
+  background-color: transparent !important;
+  width: 100%;
+  padding: 6px 0;
+  border: none;
+  border-bottom: 2px solid #cacaca;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+  color: #ffffff;
+}
+.registerForm .inputWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  position: relative;
+}
+.registerForm .inputWithIcon input {
+  flex: 1;
+  padding: 6px 0 !important;
+  padding-right: 30px !important;
+  border: none !important;
+  border-bottom: 2px solid #cacaca !important;
+  background: transparent !important;
+  font-size: 1rem;
+  outline: none;
+  color: #ffffff;
+}
+.registerForm .inputWithIcon .toggleIcon {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  font-size: 1rem;
+}
+.registerForm .inputWithIcon .toggleIcon:hover {
+  opacity: 1;
+}
+.registerForm .inputWithIcon img {
+  width: auto;
+  height: 10px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.registerForm .inputWithIcon input,
+.registerForm .inputWithIcon select {
+  flex: 1;
+  padding: 6px 0 !important;
+  border: none !important;
+  border-bottom: 2px solid #cacaca !important;
+  background: transparent !important;
+  font-size: 1rem;
+  outline: none;
+  color: #ffffff;
+}
+.registerForm .inputWithIcon input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.registerForm .inputWithIcon input:focus {
+  border-bottom-color: #460472 !important;
+}
+.registerForm button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: white;
+  border: 2px solid #cacaca;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.registerForm button:hover {
+  background-color: white;
+  color: #1f1e1e;
+  border-color: white;
+}
+@keyframes rotateBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.registerForm button:hover {
+  background-color: transparent;
+  background: linear-gradient(90deg, transparent, white, transparent) border-box;
+  border-image: linear-gradient(90deg, transparent, white, transparent) 1;
+  animation: rotateBorder 2s linear infinite;
+}
+
+.registerForm input:-webkit-autofill,
+.registerForm input:-webkit-autofill:hover,
+.registerForm input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 .contentHolder > .topIconHolder {
-  grid-column: 2 / span 9;
+  grid-column: 14 / span 4;
   grid-row: 3 / span 14;
   display: flex;
   flex-wrap: nowrap;
@@ -103,7 +265,7 @@ html {
   letter-spacing: 6px;
 }
 .contentHolder > .siteInformation {
-  grid-column: 12 / span 20;
+  grid-column: 20 / span 16;
   grid-row: 3 / span 14;
   display: flex;
   flex-direction: column;
@@ -132,7 +294,7 @@ html {
 }
 .contentHolder > .collaboratorContainer {
   grid-column: 2 / span 30;
-  grid-row: 19 / span 12;
+  grid-row: 20 / span 12;
   display: flex;
   flex-wrap: wrap;
   flex: row;
@@ -142,7 +304,7 @@ html {
   width: 100%;
   height: 100%;
   padding: 20px;
-  gap: 25px;
+  gap: 60px;
 }
 .collaboratorContainer > .collaborator {
   display: flex;
@@ -234,4 +396,26 @@ html {
   padding-right: 10px;
   user-select: none;
   background-color: #1f1e1e;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
 }

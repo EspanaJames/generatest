@@ -1,4 +1,4 @@
-export function initSubjectPopup(button) {
+export function initAddSubjectPopup(button, subject) {
   if (!button) return;
 
   button.addEventListener("click", () => {
@@ -12,17 +12,14 @@ export function initSubjectPopup(button) {
 
     const title = document.createElement("h2");
     title.classList.add("subject-popup-title");
-    title.textContent = "SUBJECT EDITOR";
+    title.textContent = "EDIT SUBJECT";
 
     const content = document.createElement("div");
     content.classList.add("subject-popup-content");
     content.innerHTML = `
-      <p>Here you can edit subjects.</p>
-      <ul>
-        <li>Mathematics</li>
-        <li>Physics</li>
-        <li>Chemistry</li>
-      </ul>
+      <p>Editing subject: <strong>${subject.subject_name}</strong></p>
+      <p>Subject Code: <strong>${subject.subject_code}</strong></p>
+      <p>Created By: <strong>${subject.created_by}</strong></p>
     `;
 
     const closeBtn = document.createElement("button");

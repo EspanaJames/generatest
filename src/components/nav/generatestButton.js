@@ -1,5 +1,7 @@
-import { initSubjectPopup } from "./popups/subjectPopup.js";
-export function renderGeneratePanel() {
+import { initAddSubjectPopup } from "./popups/addSubjectPopup.js";
+import { initEditSubjectPopup } from "./popups/subjectNotes.js";
+import { loadSubjectsByUser } from "../../api/loadSubjectsByUser.js";
+export async function renderGeneratePanel() {
   const parent = document.getElementById("parentId");
 
   parent.innerHTML = "";
@@ -37,12 +39,15 @@ export function renderGeneratePanel() {
   const testBoxContainer = document.createElement("div");
   testBoxContainer.classList.add("test-textBoxContainer-div");
 
-  for (let i = 0; i <= 40; i++) {
-    const box = document.createElement("div");
-    box.classList.add("test-box-panel");
-    box.textContent = `Subject ${i}`;
-    testBoxContainer.appendChild(box);
-  }
+  const subjects = await loadSubjectsByUser(LOGGED_IN_USER);
+
+  subjects.forEach((subj) => {
+    const boxButton = document.createElement("button");
+    boxButton.classList.add("test-box-button");
+    boxButton.textContent = subj.subject_name;
+    testBoxContainer.appendChild(boxButton);
+    initEditSubjectPopup(boxButton, subj);
+  });
   const addTestButton = document.createElement("button");
   addTestButton.textContent = "+";
   addTestButton.classList.add("add-test-button");
@@ -60,7 +65,7 @@ export function renderGeneratePanel() {
   addButton.textContent = "Add Subjects";
   addButton.classList.add("add-subject-button");
   addDiv.appendChild(addButton);
-  initSubjectPopup(addButton);
+  initAddSubjectPopup(addButton);
 
   //test add panel
   testAddPanel.appendChild(testTitleDiv);

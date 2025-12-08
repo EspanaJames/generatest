@@ -61,7 +61,7 @@
   cursor: grabbing;
   cursor: -webkit-grabbing;
 }
-.test-box-panel {
+.test-box-button {
   flex: 0 0 100px;
   display: flex;
   flex-wrap: nowrap;
@@ -77,11 +77,11 @@
   cursor: pointer;
   z-index: 2;
 }
-.test-box-panel:hover {
+.test-box-button:hover {
   transform: scale(1.1);
   border-color: #ffcc00;
 }
-.test-box-panel:active {
+.test-box-button:active {
   background-color: rgba(255, 255, 255, 0.1);
   border-color: #ffaa00;
 }

@@ -1,3 +1,4 @@
+import { supabaseClient } from "../api/supabaseClient.js";
 const form = document.querySelector(".inputForm");
 
 form.addEventListener("submit", async (e) => {
@@ -27,7 +28,7 @@ form.addEventListener("submit", async (e) => {
     });
     window.location.href = "./src/pages/dashboard.php";
   } else if (!data) {
-    alert(data);
+    alert("Invalid username or password.");
     return;
   }
 });

@@ -47,15 +47,18 @@ for all
 to public
 using (true)
 with check (true);
--- Seed some users
+
+-- Seed some users (store actual hashes, not plaintext)
 insert into adminUsers (username, password_hash, first_name, last_name) 
 values 
-  ('victor john', 'vj123', 'Victor', 'John Anunciado'),
+  ('victorjohn', 'vj123', 'Victor', 'John Anunciado'),
   ('james', 'james123', 'James', 'España');
+
 insert into subjects (subject_name, subject_code, created_by)
 values
   ('Mathematics', 'MATH101', 'james'),
   ('Physics', 'PHYS101', 'james'),
   ('Chemistry', 'CHEM101', 'james'),
   ('English', 'ENG101', 'james'),
+  ('English2', 'ENG102', 'victorjohn'),
   ('Computer Science', 'CS101', 'james');

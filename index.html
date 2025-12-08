@@ -12,7 +12,11 @@
     />
     <link rel="stylesheet" href="./assets/styles/indexStyles.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./src/api/supabaseClient.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script type="module" src="./src/api/supabaseClient.js"></script>
   </head>
   <body>
     <nav class="headerClass">
@@ -52,6 +56,81 @@
       </form>
     </nav>
     <section class="contentHolder">
+      <div class="registrationHolder">
+        <div class="registerBar">ACCOUNT REGISTRATION</div>
+
+        <div class="registerForm">
+          <form action="/register" method="post">
+            <div class="inputWithIcon">
+              <i class="fas fa-user-circle"></i>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+              />
+            </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="registerPass"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <img
+                id="toggleRegisterPass"
+                src="./assets/images/Unview.png"
+                alt="showPassword"
+                class="toggleIcon"
+                onclick="toggleRegisterPassword()"
+              />
+            </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="confirmPass"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                required
+              />
+              <img
+                id="toggleConfirmPass"
+                src="./assets/images/Unview.png"
+                alt="showPassword"
+                class="toggleIcon"
+                onclick="toggleConfirmPassword()"
+              />
+            </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                required
+              />
+            </div>
+            <div class="inputWithIcon">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                required
+              />
+            </div>
+
+            <button type="submit">Register</button>
+          </form>
+        </div>
+      </div>
       <div class="topIconHolder">
         <img src="/assets/images/user.png" alt="topLOGO" />
         <p>GENERATEST</p>
@@ -74,19 +153,22 @@
           <img src="./assets/images/user.png" alt="collaborator" />
           <p>COMPUTER ENGINEERING</p>
         </div>
+        <div class="collaborator">
+          <img src="./assets/images/user.png" alt="collaborator" />
+          <p>COMPUTER ENGINEERING</p>
+        </div>
+        <div class="collaborator">
+          <img src="./assets/images/user.png" alt="collaborator" />
+          <p>COMPUTER ENGINEERING</p>
+        </div>
       </div>
     </section>
     <footer class="infoSection">
       <!-- <div>
         <p>© 2025 James España</p>
-      </div>
-      <div>
-        <p>Don't have an account?</p>
-        <a href="#">REGISTER</a>
       </div> -->
     </footer>
-
     <script src="./src/functions/showPassword.js"></script>
-    <script src="./src/functions/dashboardLogin.js"></script>
+    <script type="module" src="./src/functions/dashboardLogin.js"></script>
   </body>
 </html>

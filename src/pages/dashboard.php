@@ -18,7 +18,7 @@ $username = $_SESSION["username"];
     <link
       rel="icon"
       type="image/x-icon"
-      href="./assets/images/logos/mainLogo.png"
+      href="../../assets/images/user.png"
     />
     <link rel="stylesheet" href="../../assets/styles/dashboardStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/homePanelStyles.css" />
@@ -26,6 +26,7 @@ $username = $_SESSION["username"];
     <link rel="stylesheet" href="../../assets/styles/gradesStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/testStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/subjectPopup.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     
@@ -77,6 +78,9 @@ $username = $_SESSION["username"];
     }
     </script>
     <script src="../functions/dashboardLogout.js"></script>
+    <script>
+    const LOGGED_IN_USER = "<?php echo htmlspecialchars($username); ?>";
+</script>
     <script type="module" src="../components/nav/main.js"></script>
 </body>
 </html>
