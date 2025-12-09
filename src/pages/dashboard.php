@@ -79,11 +79,15 @@ $username = $_SESSION["username"];
     
     }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@7.2.0/build/index.js"></script>
+    <script type="module" src="../components/nav/main.js"></script>
     <script type = "module"src="../functions/dashboardLogout.js"></script>
     <script>
     const LOGGED_IN_USER = "<?php echo htmlspecialchars($username); ?>";
     </script>
-    <script type="module" src="../components/nav/main.js"></script>
+
+    
 </body>
 </html>
 <!-- 2RZndesU -->
