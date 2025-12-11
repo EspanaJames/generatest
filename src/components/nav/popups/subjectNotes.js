@@ -42,7 +42,6 @@ export function initEditSubjectPopup(button, subject) {
         noteText.textContent = book.title;
         noteText.contentEditable = "true";
 
-        // ✅ FIX: Properly decode bytea/base64
         let fileBlob = null;
         let url = null;
         let fileObj = null;

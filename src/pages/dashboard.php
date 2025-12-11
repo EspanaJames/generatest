@@ -7,6 +7,7 @@ if (!isset($_SESSION["username"])) {
 }
 
 $username = $_SESSION["username"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +62,7 @@ $username = $_SESSION["username"];
 
     <header class = "titleHeader">
         <img src="../../assets/images/user.png" alt="company LOGO">
-        <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
+        <h2 id="welcomeText">Welcome!</h2>
     </header>
 
     <div id="parentId" class = "contentContainer">
@@ -86,6 +87,13 @@ $username = $_SESSION["username"];
     <script>
     const LOGGED_IN_USER = "<?php echo htmlspecialchars($username); ?>";
     </script>
+    <script type="module">
+    import { loadFirstName } from "../functions/useName.js";
+
+    const username = "<?php echo htmlspecialchars($username); ?>"; // from session
+    loadFirstName(username, "welcomeText"); // updates the <h2>
+    </script>
+    
 
     
 </body>
