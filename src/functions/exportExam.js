@@ -4,11 +4,10 @@ export async function exportExamToDocx(exPanel, examTitle) {
     return;
   }
 
-  const { Document, Packer, Paragraph, TextRun } = window.docx;
+  const { Document, Packer, Paragraph, TextRun, AlignmentType } = window.docx;
 
   const letters = ["A", "B", "C", "D"];
 
-  // Dummy AI distractor generator
   function generateDistractors(correctAnswer) {
     return ["Distractor 1", "Distractor 2", "Distractor 3"];
   }
@@ -16,14 +15,29 @@ export async function exportExamToDocx(exPanel, examTitle) {
   const questionChildren = [];
   const answerChildren = [];
 
-  // Add exam title
   questionChildren.push(
     new Paragraph({
+      alignment: AlignmentType.CENTER,
       children: [
         new TextRun({
           text: examTitle.textContent || "Exam",
           bold: true,
           size: 32,
+          font: "Arial",
+        }),
+      ],
+      spacing: { after: 300 },
+    })
+  );
+
+  questionChildren.push(
+    new Paragraph({
+      alignment: AlignmentType.LEFT,
+      children: [
+        new TextRun({
+          text: "Name: __________________________   Date: ____________",
+          size: 24,
+          font: "Arial",
         }),
       ],
       spacing: { after: 300 },
@@ -32,11 +46,13 @@ export async function exportExamToDocx(exPanel, examTitle) {
 
   answerChildren.push(
     new Paragraph({
+      alignment: AlignmentType.CENTER,
       children: [
         new TextRun({
-          text: examTitle.textContent + " - Answer Sheet",
+          text: `${examTitle.textContent} - Answer Sheet`,
           bold: true,
           size: 32,
+          font: "Arial",
         }),
       ],
       spacing: { after: 300 },
@@ -50,11 +66,11 @@ export async function exportExamToDocx(exPanel, examTitle) {
       const questionText = cells[1].textContent;
       const correctAnswer = cells[2].textContent;
 
-      // Randomize answer placement
       const correctIndex = Math.floor(Math.random() * 4);
       const distractors = generateDistractors(correctAnswer);
       const options = [];
       let distractorIndex = 0;
+
       for (let i = 0; i < 4; i++) {
         if (i === correctIndex) {
           options.push(`${letters[i]}. ${correctAnswer}`);
@@ -63,39 +79,49 @@ export async function exportExamToDocx(exPanel, examTitle) {
         }
       }
 
-      // Add to question sheet
       questionChildren.push(
         new Paragraph({
-          children: [new TextRun(`${questionNumber}. ${questionText}`)],
+          children: [
+            new TextRun({
+              text: `${questionNumber}. ${questionText}`,
+              font: "Arial",
+              size: 22,
+            }),
+          ],
           spacing: { after: 100 },
         })
       );
 
-      // Add options in two rows A/C and B/D
       questionChildren.push(
         new Paragraph({
-          children: [new TextRun(`${options[0]}     ${options[2]}`)],
+          alignment: AlignmentType.JUSTIFY,
+          children: [
+            new TextRun({
+              text: `${options[0]}     ${options[1]}    ${options[2]}     ${options[3]}`,
+              font: "Arial",
+              size: 22,
+            }),
+          ],
           spacing: { after: 50 },
         })
       );
-      questionChildren.push(
-        new Paragraph({
-          children: [new TextRun(`${options[1]}     ${options[3]}`)],
-          spacing: { after: 150 },
-        })
-      );
 
-      // Add to answer sheet
       answerChildren.push(
         new Paragraph({
           children: [
             new TextRun({
               text: `${questionNumber}. `,
               bold: true,
+              font: "Arial",
+              size: 24,
             }),
-            new TextRun(
-              letters.map((l, i) => (i === correctIndex ? "⬤" : "◯")).join("  ")
-            ),
+            new TextRun({
+              text: letters
+                .map((l, i) => (i === correctIndex ? "⬤" : "◯"))
+                .join("  "),
+              font: "Arial",
+              size: 22,
+            }),
           ],
           spacing: { after: 150 },
         })
@@ -104,11 +130,24 @@ export async function exportExamToDocx(exPanel, examTitle) {
   });
 
   const questionDoc = new Document({
+    styles: {
+      default: {
+        document: {
+          run: { font: "Arial", size: 24 },
+          paragraph: { spacing: { line: 276 } },
+        },
+      },
+    },
     sections: [{ children: questionChildren }],
   });
-  const answerDoc = new Document({ sections: [{ children: answerChildren }] });
 
-  // Export both
+  const answerDoc = new Document({
+    styles: {
+      default: { document: { run: { font: "Arial", size: 24 } } },
+    },
+    sections: [{ children: answerChildren }],
+  });
+
   Packer.toBlob(questionDoc).then((blob) => {
     saveAs(blob, `${examTitle.textContent || "Exam"}.docx`);
   });

@@ -30,7 +30,13 @@ $username = $_SESSION["username"];
     <link rel="stylesheet" href="../../assets/styles/examPopupStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/editExamPopupStyles.css" />
     <link rel="stylesheet" href="../../assets/styles/exportPopupStyles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@7.2.0/build/index.js"></script>
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 <body>
     

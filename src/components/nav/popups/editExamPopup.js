@@ -56,18 +56,16 @@ export async function initEditExamPopup(button, exam) {
     editor.classList.add("exams-question-editor");
 
     editor.innerHTML = `
-
   <label class="editor-label">Question</label>
   <textarea class="editor-question"></textarea>
-
   <label class="editor-label">Answer</label>
   <textarea class="editor-answer"></textarea>
-
   <span class="buttonArea">
     <button class="editor-save" style="display:none;">Save</button>
-    <button class="editor-remove" >Remove</button>
+    <button class="editor-remove">Remove</button>
   </span>
 `;
+
     const buttonArea = editor.querySelector(".buttonArea");
     const editorQuestion = editor.querySelector(".editor-question");
     const editorAnswer = editor.querySelector(".editor-answer");
@@ -80,7 +78,6 @@ export async function initEditExamPopup(button, exam) {
     const loadEditor = (rowElement, questionData) => {
       selectedQuestion = questionData;
       selectedRow = rowElement;
-
       editorQuestion.value = questionData.question;
       editorAnswer.value = questionData.answer;
       editorSave.style.display = "none";
@@ -88,7 +85,6 @@ export async function initEditExamPopup(button, exam) {
 
     const showSaveWhenEdited = () => {
       if (!selectedQuestion) return;
-
       if (
         editorQuestion.value.trim() !== selectedQuestion.question ||
         editorAnswer.value.trim() !== selectedQuestion.answer
@@ -132,7 +128,6 @@ export async function initEditExamPopup(button, exam) {
         }
 
         selectedQuestion = data;
-
         selectedRow.querySelector(".exams-question-text").textContent = newQ;
         selectedRow.querySelector(".exams-answer-text").textContent = newA;
         selectedRow.dataset.id = data.id;
@@ -159,61 +154,18 @@ export async function initEditExamPopup(button, exam) {
       editorSave.style.display = "none";
     });
 
-    const notesPanel = document.createElement("div");
-    notesPanel.classList.add("exams-notes-panel");
-
-    const notesTitle = document.createElement("h3");
-    notesTitle.textContent = "Notes";
-
-    notesPanel.appendChild(notesTitle);
-
-    let selectedNoteRow = null;
-
-    const selectNoteRow = (rowElement) => {
-      if (selectedNoteRow) {
-        selectedNoteRow.classList.remove("selected-note");
-      }
-      selectedNoteRow = rowElement;
-      selectedNoteRow.classList.add("selected-note");
-    };
-    const { data: notes, error: notesError } = await supabaseClient
-      .from("subject_books")
-      .select("*")
-      .eq("subject_code", exam.subject_code)
-      .eq("subject_name", exam.subject_name)
-      .eq("created_by", exam.created_by)
-      .order("created_at", { ascending: true });
-
-    if (notesError) {
-      console.error("Error loading notes:", notesError);
-    } else if (notes && notes.length > 0) {
-      notes.forEach((note) => {
-        const noteRow = document.createElement("div");
-        noteRow.classList.add("exams-note-row");
-        noteRow.textContent = note.title;
-
-        // click highlight
-        noteRow.addEventListener("click", () => {
-          selectNoteRow(noteRow);
-        });
-
-        notesPanel.appendChild(noteRow);
-      });
-    }
     editorRemove.addEventListener("click", async () => {
       if (!selectedQuestion) return;
-      if (!selectedQuestion.id) return; // Newly added but unsaved question
+      if (!selectedQuestion.id) return;
 
       const confirmDelete = confirm("Delete this question?");
       if (!confirmDelete) return;
 
-      // DELETE the question
       await supabaseClient
         .from("exam_questions")
         .delete()
         .eq("id", selectedQuestion.id);
 
-      // FETCH REMAINING QUESTIONS
       const { data: remaining, error } = await supabaseClient
         .from("exam_questions")
         .select("*")
@@ -287,9 +239,7 @@ export async function initEditExamPopup(button, exam) {
       .eq("exam_id", exam.exam_id)
       .order("question_number", { ascending: true });
 
-    if (error) {
-      alert("Unable to load questions.");
-    } else {
+    if (questions) {
       questions.forEach((q) => {
         const row = createQuestionRow(q);
         content.appendChild(row);
@@ -298,7 +248,6 @@ export async function initEditExamPopup(button, exam) {
 
     content.appendChild(generateBtn);
 
-    // GENERATE BUTTON NOW ADDS A QUESTION
     generateBtn.addEventListener("click", () => {
       const newQ = {
         id: null,
@@ -312,11 +261,131 @@ export async function initEditExamPopup(button, exam) {
 
       const newRow = createQuestionRow(newQ);
       content.insertBefore(newRow, generateBtn);
-
       loadEditor(newRow, newQ);
     });
 
-    // CLOSE BUTTON
+    const notesPanel = document.createElement("div");
+    notesPanel.classList.add("exams-notes-panel");
+
+    const notesListDiv = document.createElement("div");
+    notesListDiv.classList.add("notes-list-div");
+
+    const notesMiddleSpacer = document.createElement("div");
+    notesMiddleSpacer.classList.add("notes-middle-spacer");
+
+    const notesDetailDiv = document.createElement("div");
+    notesDetailDiv.classList.add("notes-detail-div");
+    notesDetailDiv.textContent = "Select a note to view details.";
+
+    const notesTitle = document.createElement("h3");
+    notesTitle.textContent = "NOTES";
+    notesListDiv.appendChild(notesTitle);
+
+    const { data: notes } = await supabaseClient
+      .from("subject_books")
+      .select("*")
+      .eq("subject_code", exam.subject_code)
+      .eq("subject_name", exam.subject_name)
+      .eq("created_by", exam.created_by)
+      .order("created_at", { ascending: true });
+
+    let selectedNoteRow = null;
+
+    const highlightNoteRow = (rowElement) => {
+      if (selectedNoteRow) {
+        selectedNoteRow.classList.remove("selected-note");
+      }
+      selectedNoteRow = rowElement;
+      selectedNoteRow.classList.add("selected-note");
+    };
+
+    function loadNoteDetails(note, chapters) {
+      notesDetailDiv.innerHTML = "";
+
+      const title = document.createElement("span");
+      title.textContent = note.title;
+
+      const chapterSelect = document.createElement("select");
+      chapterSelect.classList.add("note-chapter-select");
+
+      chapters.forEach((ch) => {
+        const opt = document.createElement("option");
+        opt.value = ch;
+        opt.textContent = ch;
+        chapterSelect.appendChild(opt);
+      });
+
+      const questionCountInput = document.createElement("input");
+      questionCountInput.type = "number";
+      questionCountInput.min = 1;
+      questionCountInput.value = 5;
+
+      const generateBtn = document.createElement("button");
+      generateBtn.textContent = "Generate Questions";
+
+      generateBtn.addEventListener("click", async () => {
+        const chapter = chapterSelect.value;
+        const count = parseInt(questionCountInput.value);
+
+        const ai = await generateQuestionsAI(note, chapter, count);
+
+        ai.questions.forEach((q, idx) => {
+          const newQ = {
+            id: null,
+            question_number:
+              content.querySelectorAll(".exams-question-row").length + 1,
+            question: q.question,
+            answer: q.answer,
+            exam_id: exam.exam_id,
+            created_by: exam.created_by,
+          };
+
+          const newRow = createQuestionRow(newQ);
+          content.insertBefore(newRow, generateBtn);
+        });
+      });
+
+      notesDetailDiv.appendChild(title);
+      notesDetailDiv.appendChild(chapterSelect);
+      notesDetailDiv.appendChild(questionCountInput);
+      notesDetailDiv.appendChild(generateBtn);
+    }
+
+    if (notes && notes.length > 0) {
+      notes.forEach((note) => {
+        const noteRow = document.createElement("div");
+        noteRow.classList.add("exams-note-row");
+        noteRow.textContent = note.title;
+
+        noteRow.addEventListener("click", async () => {
+          highlightNoteRow(noteRow);
+
+          // Show loading
+          notesMiddleSpacer.textContent = "Analyzing chapters...";
+
+          const chapters = await fetchChaptersFromAI(note);
+
+          // Render chapters in note-middle-spacer
+          notesMiddleSpacer.innerHTML = "";
+          chapters.forEach((ch) => {
+            const c = document.createElement("div");
+            c.textContent = ch;
+            c.classList.add("chapter-item");
+            notesMiddleSpacer.appendChild(c);
+          });
+
+          // Load detail panel with AI chapters
+          loadNoteDetails(note, chapters);
+        });
+
+        notesListDiv.appendChild(noteRow);
+      });
+    }
+
+    notesPanel.appendChild(notesListDiv);
+    notesPanel.appendChild(notesMiddleSpacer);
+    notesPanel.appendChild(notesDetailDiv);
+
     const closeBtn = document.createElement("button");
     closeBtn.classList.add("exams-popup-close");
     closeBtn.textContent = "Close";
@@ -332,4 +401,42 @@ export async function initEditExamPopup(button, exam) {
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
   });
+}
+
+async function fetchChaptersFromAI(note) {
+  try {
+    const response = await fetch("http://127.0.0.1:5000/extract_chapters", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: note.title,
+        pdf: note.pdf,
+      }),
+    });
+
+    const result = await response.json();
+    return result.chapters || [];
+  } catch (e) {
+    console.error("AI chapter extraction failed:", e);
+    return [];
+  }
+}
+
+async function generateQuestionsAI(note, chapter, count) {
+  try {
+    const response = await fetch("http://127.0.0.1:5000/generate_questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: note.title,
+        chapter,
+        count,
+      }),
+    });
+
+    return await response.json();
+  } catch (e) {
+    console.error("AI generate questions failed:", e);
+    return { questions: [] };
+  }
 }

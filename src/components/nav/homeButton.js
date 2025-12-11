@@ -32,7 +32,7 @@ export async function renderHomePanel() {
 
   const exPopBtn = document.createElement("button");
   exPopBtn.classList.add("home-export-button");
-  exPopBtn.textContent = "Export Docx";
+  exPopBtn.textContent = "Export ";
 
   expoPanel.appendChild(checkPanel);
   expoPanel.appendChild(exPanel);
@@ -62,22 +62,33 @@ export async function renderHomePanel() {
   let title;
   const testBoxContainer = document.createElement("div");
   testBoxContainer.classList.add("test-textBoxContainer-div");
+  let selectedExam = null;
+  exPopBtn.disabled = true;
+
   exams.forEach((exam) => {
     const boxButton = document.createElement("button");
     boxButton.classList.add("home-box-button");
     boxButton.textContent = exam.exam_id;
-    title = exam.exam_nam;
+
     boxButton.addEventListener("click", async () => {
+      selectedExam = exam;
+      exPopBtn.disabled = true;
       examTitle.textContent = exam.exam_name;
+
       await renderExam(exam, examTitle, exPanel);
+      exPopBtn.disabled = false;
     });
 
     testBoxContainer.appendChild(boxButton);
+  });
 
-    exPopBtn.addEventListener("click", () => {
-      initExportPopup(exPopBtn, exam);
-      // exportExamToDocx(exPanel, examTitle);
-    });
+  exPopBtn.addEventListener("click", () => {
+    if (!selectedExam) {
+      alert("Please select an exam first!");
+      return;
+    }
+
+    initExportPopup(exPopBtn, selectedExam, exPanel, examTitle);
   });
 
   examPanel.appendChild(testBoxContainer);
