@@ -1,6 +1,7 @@
 import { supabaseClient } from "../../api/supabaseClient.js";
 import { exportExamToDocx } from "../../functions/exportExam.js";
 import { renderExam } from "../../functions/gettingQuestions.js";
+import { initExportPopup } from "./popups/exportPopup.js";
 
 export async function renderHomePanel() {
   const parent = document.getElementById("parentId");
@@ -24,17 +25,18 @@ export async function renderHomePanel() {
 
   const exPanel = document.createElement("div");
   exPanel.classList.add("home-ex-panel");
-  exPanel.contentEditable = "true";
-  exPanel.style.whiteSpace = "pre-wrap";
-  exPanel.style.minHeight = "200px";
+  exPanel.style.display = "none";
+  // exPanel.contentEditable = "true";
+  // exPanel.style.whiteSpace = "pre-wrap";
+  // exPanel.style.minHeight = "200px";
 
-  const exportButton = document.createElement("button");
-  exportButton.classList.add("home-export-button");
-  exportButton.textContent = "Export Docx";
+  const exPopBtn = document.createElement("button");
+  exPopBtn.classList.add("home-export-button");
+  exPopBtn.textContent = "Export Docx";
 
   expoPanel.appendChild(checkPanel);
   expoPanel.appendChild(exPanel);
-  expoPanel.appendChild(exportButton);
+  expoPanel.appendChild(exPopBtn);
   panel.appendChild(examTitle);
   panel.appendChild(expoPanel);
   panel.appendChild(examPanel);
@@ -71,11 +73,12 @@ export async function renderHomePanel() {
     });
 
     testBoxContainer.appendChild(boxButton);
+
+    exPopBtn.addEventListener("click", () => {
+      initExportPopup(exPopBtn, exam);
+      // exportExamToDocx(exPanel, examTitle);
+    });
   });
 
   examPanel.appendChild(testBoxContainer);
-
-  exportButton.addEventListener("click", () => {
-    exportExamToDocx(exPanel, examTitle);
-  });
 }

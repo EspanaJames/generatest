@@ -73,6 +73,7 @@
   padding: 10px;
   border-top: 1px solid #cacaca;
 }
+
 .subject-note-text {
   height: 100%;
   width: auto;
@@ -80,6 +81,22 @@
   background-color: transparent !important;
   font-size: 1.2rem;
 }
+.subject-note-dots {
+  background-color: transparent;
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.subject-file-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .subject-note-upload {
   height: 100%;
   width: auto;

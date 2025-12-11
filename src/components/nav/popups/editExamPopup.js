@@ -18,6 +18,7 @@ export async function initEditExamPopup(button, exam) {
 
     const content = document.createElement("div");
     content.classList.add("exams-popup-content");
+
     let isDragging = false;
     let startY;
     let scrollTop;
@@ -46,117 +47,237 @@ export async function initEditExamPopup(button, exam) {
       const walk = (y - startY) * 1.5;
       content.scrollTop = scrollTop - walk;
     });
-    const addQuestionButton = document.createElement("button");
-    addQuestionButton.classList.add("exams-popup-add-question-button");
-    addQuestionButton.textContent = "+";
 
     const generateBtn = document.createElement("button");
     generateBtn.classList.add("exams-popup-generate");
-    generateBtn.textContent = "Generate Question";
-    generateBtn.addEventListener("click", () => {
-      alert("Generate question clicked!");
+    generateBtn.textContent = "Add Question";
+
+    const editor = document.createElement("div");
+    editor.classList.add("exams-question-editor");
+
+    editor.innerHTML = `
+
+  <label class="editor-label">Question</label>
+  <textarea class="editor-question"></textarea>
+
+  <label class="editor-label">Answer</label>
+  <textarea class="editor-answer"></textarea>
+
+  <span class="buttonArea">
+    <button class="editor-save" style="display:none;">Save</button>
+    <button class="editor-remove" >Remove</button>
+  </span>
+`;
+    const buttonArea = editor.querySelector(".buttonArea");
+    const editorQuestion = editor.querySelector(".editor-question");
+    const editorAnswer = editor.querySelector(".editor-answer");
+    const editorSave = editor.querySelector(".editor-save");
+    const editorRemove = editor.querySelector(".editor-remove");
+
+    let selectedQuestion = null;
+    let selectedRow = null;
+
+    const loadEditor = (rowElement, questionData) => {
+      selectedQuestion = questionData;
+      selectedRow = rowElement;
+
+      editorQuestion.value = questionData.question;
+      editorAnswer.value = questionData.answer;
+      editorSave.style.display = "none";
+    };
+
+    const showSaveWhenEdited = () => {
+      if (!selectedQuestion) return;
+
+      if (
+        editorQuestion.value.trim() !== selectedQuestion.question ||
+        editorAnswer.value.trim() !== selectedQuestion.answer
+      ) {
+        editorSave.style.display = "block";
+      } else {
+        editorSave.style.display = "none";
+      }
+    };
+
+    editorQuestion.addEventListener("input", showSaveWhenEdited);
+    editorAnswer.addEventListener("input", showSaveWhenEdited);
+
+    editorSave.addEventListener("click", async () => {
+      if (!selectedQuestion) return;
+
+      const newQ = editorQuestion.value.trim();
+      const newA = editorAnswer.value.trim();
+
+      if (!newQ || !newA) {
+        alert("Please fill out both fields.");
+        return;
+      }
+
+      if (!selectedQuestion.id) {
+        const { data, error } = await supabaseClient
+          .from("exam_questions")
+          .insert({
+            exam_id: exam.exam_id,
+            question_number: selectedQuestion.question_number,
+            question: newQ,
+            answer: newA,
+            created_by: exam.created_by,
+          })
+          .select("*")
+          .single();
+
+        if (error) {
+          alert("Failed to save new question.");
+          return;
+        }
+
+        selectedQuestion = data;
+
+        selectedRow.querySelector(".exams-question-text").textContent = newQ;
+        selectedRow.querySelector(".exams-answer-text").textContent = newA;
+        selectedRow.dataset.id = data.id;
+      } else {
+        const { error } = await supabaseClient
+          .from("exam_questions")
+          .update({
+            question: newQ,
+            answer: newA,
+          })
+          .eq("id", selectedQuestion.id);
+
+        if (error) {
+          alert("Failed to update question.");
+          return;
+        }
+
+        selectedRow.querySelector(".exams-question-text").textContent = newQ;
+        selectedRow.querySelector(".exams-answer-text").textContent = newA;
+        selectedQuestion.question = newQ;
+        selectedQuestion.answer = newA;
+      }
+
+      editorSave.style.display = "none";
     });
 
-    const closeBtn = document.createElement("button");
-    closeBtn.classList.add("exams-popup-close");
-    closeBtn.textContent = "Close";
-    closeBtn.addEventListener("click", () => {
-      document.body.removeChild(overlay);
+    const notesPanel = document.createElement("div");
+    notesPanel.classList.add("exams-notes-panel");
+
+    const notesTitle = document.createElement("h3");
+    notesTitle.textContent = "Notes";
+
+    notesPanel.appendChild(notesTitle);
+
+    let selectedNoteRow = null;
+
+    const selectNoteRow = (rowElement) => {
+      if (selectedNoteRow) {
+        selectedNoteRow.classList.remove("selected-note");
+      }
+      selectedNoteRow = rowElement;
+      selectedNoteRow.classList.add("selected-note");
+    };
+    const { data: notes, error: notesError } = await supabaseClient
+      .from("subject_books")
+      .select("*")
+      .eq("subject_code", exam.subject_code)
+      .eq("subject_name", exam.subject_name)
+      .eq("created_by", exam.created_by)
+      .order("created_at", { ascending: true });
+
+    if (notesError) {
+      console.error("Error loading notes:", notesError);
+    } else if (notes && notes.length > 0) {
+      notes.forEach((note) => {
+        const noteRow = document.createElement("div");
+        noteRow.classList.add("exams-note-row");
+        noteRow.textContent = note.title;
+
+        // click highlight
+        noteRow.addEventListener("click", () => {
+          selectNoteRow(noteRow);
+        });
+
+        notesPanel.appendChild(noteRow);
+      });
+    }
+    editorRemove.addEventListener("click", async () => {
+      if (!selectedQuestion) return;
+      if (!selectedQuestion.id) return; // Newly added but unsaved question
+
+      const confirmDelete = confirm("Delete this question?");
+      if (!confirmDelete) return;
+
+      // DELETE the question
+      await supabaseClient
+        .from("exam_questions")
+        .delete()
+        .eq("id", selectedQuestion.id);
+
+      // FETCH REMAINING QUESTIONS
+      const { data: remaining, error } = await supabaseClient
+        .from("exam_questions")
+        .select("*")
+        .eq("exam_id", exam.exam_id)
+        .order("question_number", { ascending: true });
+
+      if (error) {
+        alert("Failed to reorder questions.");
+        return;
+      }
+
+      const reordered = remaining.map((q, index) => ({
+        id: q.id,
+        new_num: index + 1,
+      }));
+
+      for (let r of reordered) {
+        await supabaseClient
+          .from("exam_questions")
+          .update({ question_number: r.new_num })
+          .eq("id", r.id);
+      }
+
+      content
+        .querySelectorAll(".exams-question-row")
+        .forEach((e) => e.remove());
+
+      reordered.forEach((r) => {
+        const qData = remaining.find((q) => q.id === r.id);
+        qData.question_number = r.new_num;
+        const newRow = createQuestionRow(qData);
+        content.insertBefore(newRow, generateBtn);
+      });
+
+      editorQuestion.value = "";
+      editorAnswer.value = "";
+      editorSave.style.display = "none";
+      selectedQuestion = null;
+      selectedRow = null;
     });
 
-    let isEditingNew = false;
-
-    const createQuestionRow = (questionData = null, isNew = false) => {
+    const createQuestionRow = (questionData) => {
       const examContainer = document.createElement("div");
       examContainer.classList.add("exams-question-row");
 
       const questionCount = document.createElement("span");
       questionCount.classList.add("exams-question-number");
-      questionCount.textContent = questionData
-        ? questionData.question_number
-        : content.querySelectorAll(".exams-question-row").length + 1;
+      questionCount.textContent = questionData.question_number;
 
       const questionText = document.createElement("div");
       questionText.classList.add("exams-question-text");
-      questionText.contentEditable = isNew;
-      questionText.textContent = questionData
-        ? questionData.question
-        : "Enter QUESTION";
+      questionText.textContent = questionData.question;
 
       const answerText = document.createElement("div");
       answerText.classList.add("exams-answer-text");
-      answerText.contentEditable = isNew;
-      answerText.textContent = questionData
-        ? questionData.answer
-        : "Enter ANSWER";
+      answerText.textContent = questionData.answer;
 
-      const modifyButton = document.createElement("button");
-      modifyButton.classList.add("exams-question-modify");
-      modifyButton.textContent = isNew ? "ACCEPT" : "EDIT";
-
-      let editing = isNew;
-
-      modifyButton.addEventListener("click", async () => {
-        const qValue = questionText.textContent.trim();
-        const aValue = answerText.textContent.trim();
-
-        if (editing) {
-          if (!qValue || !aValue) {
-            alert("Please fill in both question and answer!");
-            return;
-          }
-
-          if (isNew) {
-            const { data: inserted, error } = await supabaseClient
-              .from("exam_questions")
-              .insert({
-                exam_id: exam.exam_id,
-                question_number: parseInt(questionCount.textContent),
-                question: qValue,
-                answer: aValue,
-                created_by: exam.created_by,
-              })
-              .select("*")
-              .single();
-
-            if (error) {
-              console.error(error);
-              alert("Failed to save question.");
-              return;
-            }
-
-            questionText.contentEditable = false;
-            answerText.contentEditable = false;
-            modifyButton.textContent = "EDIT";
-            editing = false;
-            isEditingNew = false;
-          } else {
-            await supabaseClient
-              .from("exam_questions")
-              .update({
-                question: qValue,
-                answer: aValue,
-              })
-              .eq("id", questionData.id);
-
-            questionText.contentEditable = false;
-            answerText.contentEditable = false;
-            modifyButton.textContent = "EDIT";
-            editing = false;
-          }
-        } else {
-          questionText.contentEditable = true;
-          answerText.contentEditable = true;
-          modifyButton.textContent = "SAVE";
-          editing = true;
-        }
+      examContainer.addEventListener("click", () => {
+        loadEditor(examContainer, questionData);
       });
 
       examContainer.appendChild(questionCount);
       examContainer.appendChild(questionText);
       examContainer.appendChild(answerText);
-      examContainer.appendChild(modifyButton);
-
       return examContainer;
     };
 
@@ -167,29 +288,47 @@ export async function initEditExamPopup(button, exam) {
       .order("question_number", { ascending: true });
 
     if (error) {
-      console.error(error);
-      alert("Failed to load questions.");
+      alert("Unable to load questions.");
     } else {
       questions.forEach((q) => {
-        const row = createQuestionRow(q, false);
+        const row = createQuestionRow(q);
         content.appendChild(row);
       });
     }
 
     content.appendChild(generateBtn);
 
-    addQuestionButton.addEventListener("click", () => {
-      if (isEditingNew) return;
-      const newRow = createQuestionRow(null, true);
-      content.appendChild(newRow);
-      content.appendChild(generateBtn);
-      isEditingNew = true;
+    // GENERATE BUTTON NOW ADDS A QUESTION
+    generateBtn.addEventListener("click", () => {
+      const newQ = {
+        id: null,
+        question_number:
+          content.querySelectorAll(".exams-question-row").length + 1,
+        question: "Enter QUESTION",
+        answer: "Enter ANSWER",
+        exam_id: exam.exam_id,
+        created_by: exam.created_by,
+      };
+
+      const newRow = createQuestionRow(newQ);
+      content.insertBefore(newRow, generateBtn);
+
+      loadEditor(newRow, newQ);
+    });
+
+    // CLOSE BUTTON
+    const closeBtn = document.createElement("button");
+    closeBtn.classList.add("exams-popup-close");
+    closeBtn.textContent = "Close";
+    closeBtn.addEventListener("click", () => {
+      overlay.remove();
     });
 
     popup.appendChild(title);
     popup.appendChild(content);
-    popup.appendChild(addQuestionButton);
+    popup.appendChild(editor);
     popup.appendChild(closeBtn);
+    popup.appendChild(notesPanel);
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
   });

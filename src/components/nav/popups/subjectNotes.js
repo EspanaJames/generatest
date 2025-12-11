@@ -76,15 +76,109 @@ export function initEditSubjectPopup(button, subject) {
         fileLink.style.cursor = "pointer";
         fileLink.classList.add("subject-note-file-link");
 
+        let editing = false;
+        let newFileBase64 = null;
+        let newFileInfo = null;
+
         const editButton = document.createElement("button");
         editButton.textContent = "EDIT";
         editButton.classList.add("subject-note-edit");
-        editButton.addEventListener("click", () => {
-          console.log("Edit note:", noteText.textContent.trim());
+
+        const dotsButton = document.createElement("button");
+        dotsButton.innerHTML = "...";
+        dotsButton.classList.add("subject-note-dots");
+        dotsButton.style.display = "none";
+
+        const replaceFileInput = document.createElement("input");
+        replaceFileInput.type = "file";
+        replaceFileInput.accept = ".pdf,.doc,.docx,.txt";
+        replaceFileInput.style.display = "none";
+
+        function arrayBufferToBase64(buffer) {
+          let binary = "";
+          const bytes = new Uint8Array(buffer);
+          for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        }
+
+        replaceFileInput.addEventListener("change", async () => {
+          if (replaceFileInput.files.length === 0) return;
+
+          const file = replaceFileInput.files[0];
+
+          newFileInfo = { name: file.name, type: file.type };
+
+          const buffer = await file.arrayBuffer();
+          newFileBase64 = arrayBufferToBase64(buffer);
+
+          fileLink.textContent = file.name;
+          fileLink.href = URL.createObjectURL(
+            new Blob([buffer], { type: file.type })
+          );
         });
 
+        dotsButton.addEventListener("click", () => replaceFileInput.click());
+
+        editButton.addEventListener("click", async () => {
+          if (!editing) {
+            editing = true;
+            editButton.textContent = "SAVE";
+            noteText.contentEditable = true;
+
+            dotsButton.style.display = "inline-block"; // show dots
+            return;
+          }
+
+          // SAVE MODE
+          const updatedTitle = noteText.textContent.trim();
+          if (!updatedTitle) {
+            alert("Title cannot be empty.");
+            return;
+          }
+
+          const updateData = { title: updatedTitle };
+
+          // If new file selected, add to update
+          if (newFileBase64 && newFileInfo) {
+            updateData.pdf = JSON.stringify({
+              name: newFileInfo.name,
+              type: newFileInfo.type,
+              data: newFileBase64,
+            });
+          }
+
+          const { error: updateError } = await supabaseClient
+            .from("subject_books")
+            .update(updateData)
+            .eq("id", book.id);
+
+          if (updateError) {
+            console.error(updateError);
+            alert("Failed to save.");
+            return;
+          }
+
+          // Exit edit mode
+          editing = false;
+          editButton.textContent = "EDIT";
+          noteText.contentEditable = false;
+
+          dotsButton.style.display = "none"; // hide dots again
+
+          newFileBase64 = null;
+          newFileInfo = null;
+        });
+        const fileContainer = document.createElement("span");
+        fileContainer.classList.add("subject-file-container");
+
+        fileContainer.appendChild(fileLink);
+        fileContainer.appendChild(dotsButton);
+        fileContainer.appendChild(replaceFileInput);
+
         note.appendChild(noteText);
-        note.appendChild(fileLink);
+        note.appendChild(fileContainer);
         note.appendChild(editButton);
 
         content.appendChild(note);
